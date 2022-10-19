@@ -1,6 +1,9 @@
-import { Controller, Get, Param, Post, Put, Body, Query } from '@nestjs/common';
+import { Controller, Get, Param, Post, Put, Body } from '@nestjs/common';
+
+import { News } from "../dto/news.interface";
 import { NewsService } from './news.service';
-import { News } from "./news.interface";
+import { htmlTemplate } from '../views/template';
+import {newsDetail, newsTemplate} from '../views/news';
 
 @Controller('news')
 export class NewsController {
@@ -21,5 +24,15 @@ export class NewsController {
   @Put()
   async createNews(@Body() news: News): Promise<number> {
     return this.newsService.create(news);
+  }
+  @Get()
+  async getViewAll(): Promise<string> {
+    const news = this.newsService.findAll();
+    return htmlTemplate(newsTemplate(news));
+  }
+  @Get(':id/detail')
+  async getView(@Param('id') id: number): Promise<string> {
+    const news = this.newsService.findByIndex(id);
+    return htmlTemplate(newsDetail(news));
   }
 }

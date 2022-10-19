@@ -1,22 +1,64 @@
 import { Injectable } from '@nestjs/common';
-import { News } from './news.interface';
+import { News } from '../dto/news.interface';
 
 @Injectable()
 export class NewsService {
   private readonly news: News[] = [{
+    id: 0,
     title: 'Новость',
-    description: 'овая',
+    description: 'Стаая',
     author: 'Анатолий',
     createdAt: new Date(),
+    updatedAt: new Date(),
+    text: 'Yjjdfgkdfgkdf',
+    comments: [{
+      id: 0,
+      author: 'Анатолий',
+      createdAt: new Date(),
+      text: 'Yjjdfgkdfgkdf',
+    }, {
+      id: 1,
+      author: 'Анатолий',
+      createdAt: new Date(),
+      text: 'Yjjdfgkdfgkdf',
+    }],
+  }, {
+    id: 1,
+    title: 'Новость',
+    description: 'Новая',
+    author: 'Анатолий',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    text: 'Yjjdfgkdfgkdf',
+    comments: [{
+      id: 0,
+      author: 'Анатолий',
+      createdAt: new Date(),
+      text: 'Yjjdfgkdfgkdf',
+    }, {
+      id: 1,
+      author: 'Анатолий',
+      createdAt: new Date(),
+      text: 'Yjjdfgkdfgkdf',
+    }],
   }];
 
   create(news: News): number {
-    return this.news.push(news);
+    return this.news.push({
+      ...news,
+      id: this.news.length,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
   }
 
   update(id: number, news: News): News|null {
-    this.news[id].title = news.title;
-    this.news[id].description = news.description;
+    const newss = this.findAll();
+    newss[id] = {
+      ...newss[id],
+      ...news,
+      updatedAt: new Date(),
+    };
 
     return this.news[id];
   }
