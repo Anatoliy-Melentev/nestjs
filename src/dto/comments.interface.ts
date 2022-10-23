@@ -4,4 +4,5 @@ export interface Comment {
   updatedAt?: Date;
   text: string;
   author: string;
+  avatar?: string;
 }

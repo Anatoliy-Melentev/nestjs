@@ -1,5 +1,8 @@
 export class Comment {
   id!: number;
   createdAt!: Date;
-  text!: string;
+  updatedAt!: Date;
+  text: string;
+  author: string;
+  avatar: string;
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { News } from '../dto/news.interface';
+import {CreateDto} from "./dto/create.dto";
 
 @Injectable()
 export class NewsService {
@@ -43,7 +44,7 @@ export class NewsService {
     }],
   }];
 
-  create(news: News): number {
+  create(news: CreateDto): number {
     return this.news.push({
       ...news,
       id: this.news.length,

@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { Comment } from '../dto/comments.interface';
 import { News } from '../dto/news.interface';
 import { NewsService } from '../news/news.service';
+import { CreateCommentDto } from "./dto/create-comment.dto";
+import { UpdateCommentDto } from "./dto/update-comment.dto";
+
+import * as fs from 'fs';
 
 @Injectable()
 export class CommentsService {
@@ -17,7 +21,7 @@ export class CommentsService {
     return news[newsId].comments[id];
   }
 
-  async updateComment(newsId: number, id: number, data: Comment): Promise<Comment> {
+  async updateComment(newsId: number, id: number, data: UpdateCommentDto): Promise<Comment> {
     const news = await this.newsService.findAll();
     news[newsId].comments[id] = {
       ...news[newsId].comments[id],
@@ -28,7 +32,7 @@ export class CommentsService {
     return news[newsId].comments[id];
   }
 
-  async createComment(postId: number, data: Comment): Promise<Comment> {
+  async createComment(postId: number, data: CreateCommentDto): Promise<Comment> {
     const news = await this.newsService.findAll();
     news[postId].comments.push({
       ...data,
@@ -36,7 +40,8 @@ export class CommentsService {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    return data;
+
+    return news[postId].comments[news[postId].comments.length];
   }
 
   async deleteComment(postId: number, commentId: number): Promise<News[]> {

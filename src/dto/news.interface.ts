@@ -7,6 +7,7 @@ export interface News{
   createdAt?: Date;
   updatedAt?: Date;
   description?: string;
+  cover?: string;
   text: string;
   comments?: Comment[];
 }
