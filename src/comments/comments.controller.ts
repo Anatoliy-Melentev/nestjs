@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Post, Put, Query, Res, UploadedFile, UseInterceptors  } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Query, Render, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { DecrementId } from "../utils/decrement-id.decorator";
 import { News } from "../dto/news.interface";
@@ -21,6 +21,12 @@ export class CommentsController {
   @Get('/all')
   async getComments(@Query() @DecrementId(['id']) query: { id: number }): Promise<Comment[]> {
     return this.commentsService.getComments(query.id);
+  }
+
+  @Get('add')
+  @Render('comments-add')
+  async getUpload(): Promise<string> {
+    return '';
   }
 
   @Get('/')
