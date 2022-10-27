@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumberString } from 'class-validator';
 
 export class FindByIndexDto {
-  @IsNumberString()
-  @IsNotEmpty()
+  //@IsNumberString()
+  //@IsNotEmpty()
   id: number;
 }

@@ -1,14 +1,13 @@
-import { Controller, Get, Param, Post, Put, Body,UploadedFile, UseInterceptors } from '@nestjs/common';
+import {Controller, Get, Param, Post, Put, Body, UploadedFile, UseInterceptors, Res, Render} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { HelperFileLoader } from '../utils/HelperFileLoader';
 
 import { News } from "../dto/news.interface";
 import { NewsService } from './news.service';
-import { htmlTemplate } from '../views/template';
-import { newsDetail, newsTemplate, uploadForm } from '../views/news';
 import { FindByIndexDto } from "./dto/find-by-index.dto";
 import { CreateDto } from "./dto/create.dto";
+import { Express } from "express";
 
 const helperFileLoader = new HelperFileLoader();
 helperFileLoader.path = '/news';
@@ -21,9 +20,12 @@ export class NewsController {
   async getAllNews(): Promise<News[]> {
     return this.newsService.findAll();
   }
-  @Get('upload')
-  async getUpload(): Promise<string> {
-    return htmlTemplate(uploadForm());
+
+  @Get(':id/detail')
+  @Render('news-detail')
+  async getView(@Param('id') id: FindByIndexDto): Promise<{ news: News }> {
+    const news = this.newsService.findByIndex(+id);
+    return { news: news };
   }
   @Get(':id')
   async getNews(@Param('id') id: FindByIndexDto): Promise<News|null> {
@@ -44,17 +46,26 @@ export class NewsController {
     return this.newsService.update(id, news);
   }
   @Post('create')
-  async createNews(@Body() news: CreateDto): Promise<number> {
-    return this.newsService.create(news);
+  @UseInterceptors(FileInterceptor('file',  {
+    storage: diskStorage({
+      destination: helperFileLoader.destinationPath,
+      filename: helperFileLoader.customFileName,
+    }),
+  }))
+  async createNews(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() news: CreateDto
+  ): Promise<number> {
+    return this.newsService.create({
+      ...news, cover: 'news/' + file.filename
+    });
   }
+
   @Get()
-  async getViewAll(): Promise<string> {
+  @Render('news-list')
+  async getViewAll(): Promise<{ news: News[] }> {
     const news = this.newsService.findAll();
-    return htmlTemplate(newsTemplate(news));
+    return { news: news };
   }
-  @Get(':id/detail')
-  async getView(@Param('id') id: FindByIndexDto): Promise<string> {
-    const news = this.newsService.findByIndex(+id);
-    return htmlTemplate(newsDetail(news));
-  }
+
 }

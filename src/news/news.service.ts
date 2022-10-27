@@ -9,6 +9,7 @@ export class NewsService {
     title: 'Новость',
     description: 'Стаая',
     author: 'Анатолий',
+    cover: '/news/a6907c0c-b64c-4699-a52e-0ba27033cc1e.jpg',
     createdAt: new Date(),
     updatedAt: new Date(),
     text: 'Yjjdfgkdfgkdf',
@@ -28,6 +29,7 @@ export class NewsService {
     title: 'Новость',
     description: 'Новая',
     author: 'Анатолий',
+    cover: '/news/7c5d29f4-dc6b-44e6-ad32-9ea5a7ed6b1e.jpg',
     createdAt: new Date(),
     updatedAt: new Date(),
     text: 'Yjjdfgkdfgkdf',
@@ -69,7 +71,6 @@ export class NewsService {
   }
 
   findByIndex(index: number): News|null {
-    console.assert(typeof this.news[index] !== 'undefined', '[findByIndex] Invalid')
     if (typeof this.news[index] !== 'undefined') {
       return this.news[index]
     }
